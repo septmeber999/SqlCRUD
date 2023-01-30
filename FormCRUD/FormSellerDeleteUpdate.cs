@@ -52,6 +52,7 @@ namespace FormCRUD
 			}
 			EN.SaveChanges();
 			MessageBox.Show("更新成功");
+			NotifyOwner();
 		}
 
 		private void btnDelete_Click(object sender, EventArgs e)
@@ -62,7 +63,15 @@ namespace FormCRUD
 			EN.Sellers.Remove(seller.First());
 			EN.SaveChanges();
 			MessageBox.Show("刪除成功");
+			NotifyOwner();
 
+		}
+		private void NotifyOwner()
+		{
+			IGridContainer con = this.Owner as IGridContainer;
+			if (con != null) con.Display();
+
+			this.DialogResult = DialogResult.OK;
 		}
 	}
 }

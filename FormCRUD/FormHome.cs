@@ -11,13 +11,23 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace FormCRUD
 {
-	public partial class FormHome : Form
+	public interface IGridContainer
+	{
+		void Display();
+	}
+	public partial class FormHome : Form, IGridContainer
 	{
 		public FormHome()
 		{
 			InitializeComponent();
 		}
 		Entities EN = new Entities();
+		public void Display()
+		{
+			var seller = from s in EN.Sellers
+						 select s;
+			dataGridView1.DataSource= seller.ToList();
+		}
 		private void button1_Click(object sender, EventArgs e)
 		{
 			{
@@ -64,11 +74,13 @@ namespace FormCRUD
 		{
 			if (comboBox1.Text == "Seller")
 			{
-				var seller = from s in EN.Sellers
-							 where s.Account.Contains(textBox1.Text)
-							 select s;
-				int sid = seller.ToList()[e.RowIndex].ID;
-				FormSellerDeleteUpdate frm = new FormSellerDeleteUpdate(sid);
+				//var seller = from s in EN.Sellers
+				//			 where s.Account.Contains(textBox1.Text)
+				//			 select s;
+				int str = int.Parse(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+
+				//int sid = seller.ToList()[e.RowIndex].ID;
+				FormSellerDeleteUpdate frm = new FormSellerDeleteUpdate(str);
 				frm.Owner= this;
 				frm.ShowDialog();
 			}
@@ -89,6 +101,7 @@ namespace FormCRUD
 		private void button2_Click(object sender, EventArgs e)
 		{
 			FormCreatSeller frm= new FormCreatSeller();
+			frm.Owner= this;
 			frm.ShowDialog();
 		}
 	}
